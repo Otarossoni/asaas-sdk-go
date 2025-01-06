@@ -25,6 +25,8 @@ Funcionalidades disponibilizadas pelo SDK são:
 - Busca de Cliente pelo CPF/CNPJ
 - Busca de Cliente pelo Nome
 - Criação de Cobrança
+- Busca de Cobrança pelo ID Asaas
+- Exclusão de Cobrança
 
 ### 📃 Documentação Oficial
 

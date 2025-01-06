@@ -107,6 +107,11 @@ type BillingResponse struct {
 	PostalService         bool   `json:"postalService"`         // Informa se a cobrança foi enviada por e-mail
 }
 
+type DeleteBillingResponse struct {
+	Deleted bool   `json:"deleted"` // Se a Cobrança foi excluída
+	Id      string `json:"id"`      // ID da Cobrança excluída
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // ErrorResponse é a struct que é usada para receber os retornos de erro do Asaas

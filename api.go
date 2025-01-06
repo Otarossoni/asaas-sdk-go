@@ -173,6 +173,30 @@ func GetBillingByAsaasId(billingId string, asaasAccesstoken ...string) (*Billing
 	return &billingResponse, nil, err
 }
 
+// DeleteBilling é o método responsável por deletar uma cobrança pelo ID Asaas
+func DeleteBilling(billingId string, asaasAccesstoken ...string) (*DeleteBillingResponse, *ErrorResponse, error) {
+
+	params := request.Params{
+		Method:  "DELETE",
+		Headers: map[string]interface{}{"access_token": getAccessToken(asaasAccesstoken...)},
+		URL:     BASE_URL + "/v3/payments/" + billingId,
+	}
+
+	response, err := request.New(params)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	if response.StatusCode > 300 {
+		resp, err := parseError(response.RawBody)
+		return nil, resp, err
+	}
+
+	var deleteBillingResponse DeleteBillingResponse
+	err = json.Unmarshal(response.RawBody, &deleteBillingResponse)
+	return &deleteBillingResponse, nil, err
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // getAccessToken é a função responsável por retornar o AccessToken do Asaas.
