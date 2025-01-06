@@ -149,6 +149,30 @@ func CreateBilling(billingRequest BillingRequest, asaasAccesstoken ...string) (*
 	return &billingResponse, nil, err
 }
 
+// GetBillingByAsaasId é o método responsável por buscar uma cobrança pelo ID Asaas
+func GetBillingByAsaasId(billingId string, asaasAccesstoken ...string) (*BillingResponse, *ErrorResponse, error) {
+
+	params := request.Params{
+		Method:  "GET",
+		Headers: map[string]interface{}{"access_token": getAccessToken(asaasAccesstoken...)},
+		URL:     BASE_URL + "/v3/payments/" + billingId,
+	}
+
+	response, err := request.New(params)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	if response.StatusCode > 300 {
+		resp, err := parseError(response.RawBody)
+		return nil, resp, err
+	}
+
+	var billingResponse BillingResponse
+	err = json.Unmarshal(response.RawBody, &billingResponse)
+	return &billingResponse, nil, err
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // getAccessToken é a função responsável por retornar o AccessToken do Asaas.
