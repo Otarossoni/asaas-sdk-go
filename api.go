@@ -36,6 +36,30 @@ func CreateCustomer(createCustomerRequest CreateCustomerRequest, asaasAccesstoke
 	return &customerResponse, nil, err
 }
 
+// GetCustomerByAsaasId é o método responsável por buscar um cliente pelo ID Asaas
+func GetCustomerByAsaasId(customerId string, asaasAccesstoken ...string) (*CreateCustomerResponse, *ErrorResponse, error) {
+
+	params := request.Params{
+		Method:  "GET",
+		Headers: map[string]interface{}{"access_token": getAccessToken(asaasAccesstoken...)},
+		URL:     BASE_URL + "/v3/customers/" + customerId,
+	}
+
+	response, err := request.New(params)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	if response.StatusCode > 300 {
+		resp, err := parseError(response.RawBody)
+		return nil, resp, err
+	}
+
+	var customerResponse CreateCustomerResponse
+	err = json.Unmarshal(response.RawBody, &customerResponse)
+	return &customerResponse, nil, err
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // getAccessToken é a função responsável por retornar o AccessToken do Asaas.
