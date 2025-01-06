@@ -1,7 +1,7 @@
 package asaas
 
-// CreateCustomerRequest é a struct usada para a criação de um novo Cliente na API Asaas
-type CreateCustomerRequest struct {
+// CustomerRequest é a struct usada para a criação de um novo Cliente na API Asaas
+type CustomerRequest struct {
 	Name                 string  `json:"name"`                 // Obrigatório - Nome do Cliente
 	CpfCnpj              string  `json:"cpfCnpj"`              // Obrigatório - CPF ou CNPJ do Cliente
 	Email                *string `json:"email"`                // E-mail do Cliente
@@ -23,8 +23,8 @@ type CreateCustomerRequest struct {
 	ForeignCustomer      *bool   `json:"foreignCustomer"`      // Define se o cliente é estrangeiro
 }
 
-// CreateCustomerResponse é a struct usada para receber os dados da criação de um novo Cliente na API Asaas
-type CreateCustomerResponse struct {
+// CustomerResponse é a struct usada para receber os dados da criação de um novo Cliente na API Asaas
+type CustomerResponse struct {
 	Object                string  `json:"object"`                // Tipo de recurso sendo criado
 	Id                    string  `json:"id"`                    // ID do cliente na API Asaas
 	Name                  string  `json:"name"`                  // Nome do Cliente
@@ -56,17 +56,60 @@ type CreateCustomerResponse struct {
 }
 
 type ListCustomerResponse struct {
-	Object     string                   `json:"object"`     // Tipo de recurso sendo listado
-	HasMore    bool                     `json:"hasMore"`    // Flag que informa se há mais registros na lista
-	TotalCount int                      `json:"totalCount"` // Total de registros na lista
-	Limit      int                      `json:"limit"`      // Parâmetro "limit" da paginação
-	Offset     int                      `json:"offset"`     // Parâmetro "offset" da paginação
-	Data       []CreateCustomerResponse `json:"data"`       // Dados dos clientes encontrados para os filtros
+	Object     string             `json:"object"`     // Tipo de recurso sendo listado
+	HasMore    bool               `json:"hasMore"`    // Flag que informa se há mais registros na lista
+	TotalCount int                `json:"totalCount"` // Total de registros na lista
+	Limit      int                `json:"limit"`      // Parâmetro "limit" da paginação
+	Offset     int                `json:"offset"`     // Parâmetro "offset" da paginação
+	Data       []CustomerResponse `json:"data"`       // Dados dos clientes encontrados para os filtros
+}
+
+// BillingRequest é a struct usada para a criação de uma nova Cobrança na API Asaas
+type BillingRequest struct {
+	Customer string `json:"customer"` // Obrigatório - ID do cliente gerado na API Asaas
+	// Obrigatório - Forma de pagamento:
+	//  * "UNDEFINED"
+	//  * "BOLETO"
+	//  * "CREDIT_CARD"
+	//  * "PIX"
+	BillingType                                string   `json:"billingType"`
+	Value                                      float64  `json:"value"`                                      // Obrigatório - Valor da cobrança
+	DueDate                                    string   `json:"dueDate"`                                    // Obrigatório - Data de vencimento da cobrança - Formato: yyyy-mm-dd
+	Description                                *string  `json:"description"`                                // Descrição da cobrança (máx. 500 caracteres)
+	DaysAfterDueDateToRegistrationCancellation *int     `json:"daysAfterDueDateToRegistrationCancellation"` // Dias após o vencimento para cancelamento do registro (somente para boleto bancário)
+	ExternalReference                          *string  `json:"externalReference"`                          // Campo livre para busca
+	InstallmentCount                           *int     `json:"installmentCount"`                           // Número de parcelas (somente no caso de cobrança parcelada)
+	TotalValue                                 *float64 `json:"totalValue"`                                 // Informe o valor total de uma cobrança que será parcelada (somente no caso de cobrança parcelada). Caso enviado este campo o installmentValue não é necessário, o cálculo por parcela será automático
+	InstallmentValue                           *float64 `json:"installmentValue"`                           // Valor de cada parcela (somente no caso de cobrança parcelada). Envie este campo em caso de querer definir o valor de cada parcela
+	PostalService                              *bool    `json:"postalService"`                              // Define se a cobrança será enviada via Correios
+}
+
+// BillingResponse é a struct usada para receber os dados da criação de uma nova Cobrança na API Asaas
+type BillingResponse struct {
+	Object   string  `json:"object"`   // Tipo de recurso sendo criado
+	Id       string  `json:"id"`       // ID da cobrança na API Asaas
+	Customer string  `json:"customer"` // ID do cliente gerado na API Asaas
+	Value    float64 `json:"value"`    // Valor da cobrança
+	// Obrigatório - Forma de pagamento:
+	//  * "UNDEFINED"
+	//  * "BOLETO"
+	//  * "CREDIT_CARD"
+	//  * "PIX"
+	BillingType           string `json:"billingType"`
+	CanBePaidAfterDueDate bool   `json:"canBePaidAfterDueDate"` // Informa se a cobrança pode ser paga após a data de vencimento
+	Status                string `json:"status"`                // Situação da cobrança
+	DueDate               string `json:"dueDate"`               // Data de vencimento da cobrança - Formato: yyyy-mm-dd
+	InvoiceUrl            string `json:"invoiceUrl"`            // URL da cobrança, onde pode ser baixado o PDF / obtida a linha digitável / obtido o código do Boleto PIX
+	InvoiceNumber         string `json:"invoiceNumber"`         // Número da cobrança
+	Deleted               bool   `json:"deleted"`               // Se a Cobrança foi excluída na base de dados da API Asaas
+	NossoNumero           string `json:"nossoNumero"`           // Campo "Nosso Número" do boleto
+	BankSlipUrl           string `json:"bankSlipUrl"`           // URL do boleto da cobrança
+	PostalService         bool   `json:"postalService"`         // Informa se a cobrança foi enviada por e-mail
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// ErrorResponse é a struct que é usada para receber os retornos de erro do Asaas.
+// ErrorResponse é a struct que é usada para receber os retornos de erro do Asaas
 type ErrorResponse struct {
 	Error   string `json:"error"`   // Slug do erro que retornou
 	Message string `json:"message"` // Mensagem de erro relacionada ao campo

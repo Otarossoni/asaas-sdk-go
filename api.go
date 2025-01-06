@@ -12,11 +12,11 @@ import (
 const BASE_URL = "https://sandbox.asaas.com/api"
 
 // CreateCustomer é o método responsável por realizar a criação do Cliente
-func CreateCustomer(createCustomerRequest CreateCustomerRequest, asaasAccesstoken ...string) (*CreateCustomerResponse, *ErrorResponse, error) {
+func CreateCustomer(customerRequest CustomerRequest, asaasAccesstoken ...string) (*CustomerResponse, *ErrorResponse, error) {
 
 	params := request.Params{
 		Method:  "POST",
-		Body:    createCustomerRequest,
+		Body:    customerRequest,
 		Headers: map[string]interface{}{"access_token": getAccessToken(asaasAccesstoken...)},
 		URL:     BASE_URL + "/v3/customers",
 	}
@@ -31,13 +31,13 @@ func CreateCustomer(createCustomerRequest CreateCustomerRequest, asaasAccesstoke
 		return nil, resp, err
 	}
 
-	var customerResponse CreateCustomerResponse
+	var customerResponse CustomerResponse
 	err = json.Unmarshal(response.RawBody, &customerResponse)
 	return &customerResponse, nil, err
 }
 
 // GetCustomerByAsaasId é o método responsável por buscar um cliente pelo ID Asaas
-func GetCustomerByAsaasId(customerId string, asaasAccesstoken ...string) (*CreateCustomerResponse, *ErrorResponse, error) {
+func GetCustomerByAsaasId(customerId string, asaasAccesstoken ...string) (*CustomerResponse, *ErrorResponse, error) {
 
 	params := request.Params{
 		Method:  "GET",
@@ -55,13 +55,13 @@ func GetCustomerByAsaasId(customerId string, asaasAccesstoken ...string) (*Creat
 		return nil, resp, err
 	}
 
-	var customerResponse CreateCustomerResponse
+	var customerResponse CustomerResponse
 	err = json.Unmarshal(response.RawBody, &customerResponse)
 	return &customerResponse, nil, err
 }
 
 // GetCustomerByCpfCnpj é o método responsável por buscar um cliente pelo CPF/CNPJ
-func GetCustomerByCpfCnpj(customerCpfCnpj string, asaasAccesstoken ...string) (*CreateCustomerResponse, *ErrorResponse, error) {
+func GetCustomerByCpfCnpj(customerCpfCnpj string, asaasAccesstoken ...string) (*CustomerResponse, *ErrorResponse, error) {
 
 	params := request.Params{
 		Method:  "GET",
@@ -89,11 +89,11 @@ func GetCustomerByCpfCnpj(customerCpfCnpj string, asaasAccesstoken ...string) (*
 		return &customerResponse.Data[0], nil, err
 	}
 
-	return &CreateCustomerResponse{}, nil, err
+	return &CustomerResponse{}, nil, err
 }
 
 // GetCustomerByName é o método responsável por buscar um cliente pelo nome
-func GetCustomerByName(customerName string, asaasAccesstoken ...string) (*CreateCustomerResponse, *ErrorResponse, error) {
+func GetCustomerByName(customerName string, asaasAccesstoken ...string) (*CustomerResponse, *ErrorResponse, error) {
 
 	params := request.Params{
 		Method:  "GET",
@@ -121,7 +121,32 @@ func GetCustomerByName(customerName string, asaasAccesstoken ...string) (*Create
 		return &customerResponse.Data[0], nil, err
 	}
 
-	return &CreateCustomerResponse{}, nil, err
+	return &CustomerResponse{}, nil, err
+}
+
+// CreateBilling é o método responsável por realizar a criação de uma Cobrança
+func CreateBilling(billingRequest BillingRequest, asaasAccesstoken ...string) (*BillingResponse, *ErrorResponse, error) {
+
+	params := request.Params{
+		Method:  "POST",
+		Body:    billingRequest,
+		Headers: map[string]interface{}{"access_token": getAccessToken(asaasAccesstoken...)},
+		URL:     BASE_URL + "/v3/payments",
+	}
+
+	response, err := request.New(params)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	if response.StatusCode > 300 {
+		resp, err := parseError(response.RawBody)
+		return nil, resp, err
+	}
+
+	var billingResponse BillingResponse
+	err = json.Unmarshal(response.RawBody, &billingResponse)
+	return &billingResponse, nil, err
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
