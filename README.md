@@ -17,6 +17,14 @@ Para realizar a instalação do pacote e usar as funcionalidades do SDK, na past
 $ go get -u github.com/Otarossoni/asaas-sdk-go
 ```
 
+### ⚙️ Funcionalidades
+
+Funcionalidades disponibilizadas pelo SDK são:
+- Criação de Cliente
+- Busca de Cliente pelo ID Asaas
+- Busca de Cliente pelo CPF/CNPJ
+- Busca de Cliente pelo Nome
+
 ### 📃 Documentação Oficial
 
 Todas as implementações usaram como base a [Documentação da API Asaas](https://docs.asaas.com/reference/comece-por-aqui).
