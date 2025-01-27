@@ -9,7 +9,7 @@ import (
 
 // Sandbox = "https://sandbox.asaas.com/api"
 // Produção = "https://api.asaas.com"
-const BASE_URL = "https://sandbox.asaas.com/api"
+const BASE_URL = "https://api.asaas.com"
 
 // CreateCustomer é o método responsável por realizar a criação do Cliente
 func CreateCustomer(customerRequest CustomerRequest, asaasAccesstoken ...string) (*CustomerResponse, *ErrorResponse, error) {
