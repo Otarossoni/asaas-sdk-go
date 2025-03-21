@@ -7,18 +7,26 @@ import (
 	"github.com/Otarossoni/asaas-sdk-go/internal/request"
 )
 
-// Sandbox = "https://sandbox.asaas.com/api"
-// Produção = "https://api.asaas.com"
-const BASE_URL = "https://api.asaas.com"
+type AsaasApi struct {
+	BaseURL string
+	Token   string
+}
+
+func NewAsaasApi(environment, token string) *AsaasApi {
+	return &AsaasApi{
+		BaseURL: getBaseURL(environment),
+		Token:   getAccessToken(token),
+	}
+}
 
 // CreateCustomer é o método responsável por realizar a criação do Cliente
-func CreateCustomer(customerRequest CustomerRequest, asaasAccesstoken ...string) (*CustomerResponse, *ErrorResponse, error) {
+func (a *AsaasApi) CreateCustomer(customerRequest CustomerRequest) (*CustomerResponse, *ErrorResponse, error) {
 
 	params := request.Params{
 		Method:  "POST",
 		Body:    customerRequest,
-		Headers: map[string]interface{}{"access_token": getAccessToken(asaasAccesstoken...)},
-		URL:     BASE_URL + "/v3/customers",
+		Headers: map[string]interface{}{"access_token": a.Token},
+		URL:     a.BaseURL + "/v3/customers",
 	}
 
 	response, err := request.New(params)
@@ -37,12 +45,12 @@ func CreateCustomer(customerRequest CustomerRequest, asaasAccesstoken ...string)
 }
 
 // GetCustomerByAsaasId é o método responsável por buscar um cliente pelo ID Asaas
-func GetCustomerByAsaasId(customerId string, asaasAccesstoken ...string) (*CustomerResponse, *ErrorResponse, error) {
+func (a *AsaasApi) GetCustomerByAsaasId(customerId string) (*CustomerResponse, *ErrorResponse, error) {
 
 	params := request.Params{
 		Method:  "GET",
-		Headers: map[string]interface{}{"access_token": getAccessToken(asaasAccesstoken...)},
-		URL:     BASE_URL + "/v3/customers/" + customerId,
+		Headers: map[string]interface{}{"access_token": a.Token},
+		URL:     a.BaseURL + "/v3/customers/" + customerId,
 	}
 
 	response, err := request.New(params)
@@ -61,12 +69,12 @@ func GetCustomerByAsaasId(customerId string, asaasAccesstoken ...string) (*Custo
 }
 
 // GetCustomerByCpfCnpj é o método responsável por buscar um cliente pelo CPF/CNPJ
-func GetCustomerByCpfCnpj(customerCpfCnpj string, asaasAccesstoken ...string) (*CustomerResponse, *ErrorResponse, error) {
+func (a *AsaasApi) GetCustomerByCpfCnpj(customerCpfCnpj string) (*CustomerResponse, *ErrorResponse, error) {
 
 	params := request.Params{
 		Method:  "GET",
-		Headers: map[string]interface{}{"access_token": getAccessToken(asaasAccesstoken...)},
-		URL:     BASE_URL + "/v3/customers",
+		Headers: map[string]interface{}{"access_token": a.Token},
+		URL:     a.BaseURL + "/v3/customers",
 		QueryParams: map[string]interface{}{
 			"cpfCnpj": customerCpfCnpj,
 		},
@@ -93,12 +101,12 @@ func GetCustomerByCpfCnpj(customerCpfCnpj string, asaasAccesstoken ...string) (*
 }
 
 // GetCustomerByName é o método responsável por buscar um cliente pelo nome
-func GetCustomerByName(customerName string, asaasAccesstoken ...string) (*CustomerResponse, *ErrorResponse, error) {
+func (a *AsaasApi) GetCustomerByName(customerName string) (*CustomerResponse, *ErrorResponse, error) {
 
 	params := request.Params{
 		Method:  "GET",
-		Headers: map[string]interface{}{"access_token": getAccessToken(asaasAccesstoken...)},
-		URL:     BASE_URL + "/v3/customers",
+		Headers: map[string]interface{}{"access_token": a.Token},
+		URL:     a.BaseURL + "/v3/customers",
 		QueryParams: map[string]interface{}{
 			"name": customerName,
 		},
@@ -125,13 +133,13 @@ func GetCustomerByName(customerName string, asaasAccesstoken ...string) (*Custom
 }
 
 // CreateBilling é o método responsável por realizar a criação de uma Cobrança
-func CreateBilling(billingRequest BillingRequest, asaasAccesstoken ...string) (*BillingResponse, *ErrorResponse, error) {
+func (a *AsaasApi) CreateBilling(billingRequest BillingRequest) (*BillingResponse, *ErrorResponse, error) {
 
 	params := request.Params{
 		Method:  "POST",
 		Body:    billingRequest,
-		Headers: map[string]interface{}{"access_token": getAccessToken(asaasAccesstoken...)},
-		URL:     BASE_URL + "/v3/payments",
+		Headers: map[string]interface{}{"access_token": a.Token},
+		URL:     a.BaseURL + "/v3/payments",
 	}
 
 	response, err := request.New(params)
@@ -150,12 +158,12 @@ func CreateBilling(billingRequest BillingRequest, asaasAccesstoken ...string) (*
 }
 
 // GetBillingByAsaasId é o método responsável por buscar uma cobrança pelo ID Asaas
-func GetBillingByAsaasId(billingId string, asaasAccesstoken ...string) (*BillingResponse, *ErrorResponse, error) {
+func (a *AsaasApi) GetBillingByAsaasId(billingId string) (*BillingResponse, *ErrorResponse, error) {
 
 	params := request.Params{
 		Method:  "GET",
-		Headers: map[string]interface{}{"access_token": getAccessToken(asaasAccesstoken...)},
-		URL:     BASE_URL + "/v3/payments/" + billingId,
+		Headers: map[string]interface{}{"access_token": a.Token},
+		URL:     a.BaseURL + "/v3/payments/" + billingId,
 	}
 
 	response, err := request.New(params)
@@ -174,12 +182,12 @@ func GetBillingByAsaasId(billingId string, asaasAccesstoken ...string) (*Billing
 }
 
 // DeleteBilling é o método responsável por deletar uma cobrança pelo ID Asaas
-func DeleteBilling(billingId string, asaasAccesstoken ...string) (*DeleteBillingResponse, *ErrorResponse, error) {
+func (a *AsaasApi) DeleteBilling(billingId string) (*DeleteBillingResponse, *ErrorResponse, error) {
 
 	params := request.Params{
 		Method:  "DELETE",
-		Headers: map[string]interface{}{"access_token": getAccessToken(asaasAccesstoken...)},
-		URL:     BASE_URL + "/v3/payments/" + billingId,
+		Headers: map[string]interface{}{"access_token": a.Token},
+		URL:     a.BaseURL + "/v3/payments/" + billingId,
 	}
 
 	response, err := request.New(params)
@@ -207,6 +215,14 @@ func getAccessToken(asaasAccessToken ...string) string {
 	} else {
 		return os.Getenv("ASAAS_ACCESS_TOKEN")
 	}
+}
+
+// getBaseURL é a função responsável por validar o ambiente e a URL base.
+func getBaseURL(environment string) string {
+	if environment == "production" {
+		return "https://api.asaas.com"
+	}
+	return "https://sandbox.asaas.com/api"
 }
 
 // parseError é a função que pega os dados do erro do Asaas e retorna em formato de Struct.
