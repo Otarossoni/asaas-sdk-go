@@ -205,6 +205,58 @@ func (a *AsaasApi) DeleteBilling(billingId string) (*DeleteBillingResponse, *Err
 	return &deleteBillingResponse, nil, err
 }
 
+// CreateSubscription é o método responsável por realizar a criação de uma assinatura para um cliente
+func (a *AsaasApi) CreateSubscription(subscriptionRequest SubscriptionRequest) (*SubscriptionResponse, *ErrorResponse, error) {
+
+	params := request.Params{
+		Method:  "POST",
+		Body:    subscriptionRequest,
+		Headers: map[string]interface{}{"access_token": a.Token},
+		URL:     a.BaseURL + "/v3/subscriptions",
+	}
+
+	response, err := request.New(params)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	if response.StatusCode > 300 {
+		resp, err := parseError(response.RawBody)
+		return nil, resp, err
+	}
+
+	var subscriptionResponse SubscriptionResponse
+	err = json.Unmarshal(response.RawBody, &subscriptionResponse)
+	return &subscriptionResponse, nil, err
+}
+
+// GetSubscriptionsByCustomerId é o método responsável por buscar as assinaturas de um cliente
+func (a *AsaasApi) GetSubscriptionsByCustomerId(customerId string) ([]SubscriptionResponse, *ErrorResponse, error) {
+
+	params := request.Params{
+		Method:  "GET",
+		Headers: map[string]interface{}{"access_token": a.Token},
+		URL:     a.BaseURL + "/v3/subscriptions",
+		QueryParams: map[string]interface{}{
+			"customer": customerId,
+		},
+	}
+
+	response, err := request.New(params)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	if response.StatusCode > 300 {
+		resp, err := parseError(response.RawBody)
+		return nil, resp, err
+	}
+
+	var subscriptionResponse ListSubscriptionResponse
+	err = json.Unmarshal(response.RawBody, &subscriptionResponse)
+	return subscriptionResponse.Data, nil, err
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // getAccessToken é a função responsável por retornar o AccessToken do Asaas.

@@ -112,6 +112,80 @@ type DeleteBillingResponse struct {
 	Id      string `json:"id"`      // ID da Cobrança excluída
 }
 
+// SubscriptionRequest é a struct usada para a criação de uma nova assinatura na API Asaas
+type SubscriptionRequest struct {
+	CustomerId string `json:"customer"` // Obrigatório - Identificador único do cliente
+	// Obrigatório - Forma de pagamento:
+	//  * "UNDEFINED"
+	//  * "BOLETO"
+	//  * "CREDIT_CARD"
+	//  * "PIX"
+	BillingType string  `json:"billingType"`
+	Value       float64 `json:"value"`       // Obrigatório - Valor da assinatura
+	NextDueDate string  `json:"nextDueDate"` // Obrigatório - Vencimento da primeira cobrança
+	// Obrigatório - Periodicidade da cobrança:
+	//  * "WEEKLY"
+	//  * "BIWEEKLY"
+	//  * "MONTHLY"
+	//  * "BIMONTHLY"
+	//  * "QUARTERLY"
+	//  * "SEMIANNUALLY"
+	//  * "YEARLY"
+	Cycle             string  `json:"cycle"`
+	Description       *string `json:"description"`       // Descrição da assinatura (máx. 500 caracteres)
+	EndDate           *string `json:"endDate"`           // Data limite para vencimento das cobranças
+	MaxPayments       *int    `json:"maxPayments"`       // Número máximo de cobranças a serem geradas para esta assinatura
+	ExternalReference *string `json:"externalReference"` // Identificador do sistema integrado ao Asaas
+}
+
+// SubscriptionResponse é a struct usada para receber os dados da criação de uma nova assinatura na API Asaas
+type SubscriptionResponse struct {
+	Object      string `json:"object"`      // Tipo de recurso sendo criado
+	Id          string `json:"id"`          // ID da assinatura na API Asaas
+	DateCreated string `json:"dateCreated"` // Data de criação da assinatura
+	CustomerId  string `json:"customer"`    // Identificador único do cliente
+	PaymentLink string `json:"paymentLink"` // Identificador único do link de pagamentos ao qual a assinatura pertence
+	// Forma de pagamento:
+	//  * "UNDEFINED"
+	//  * "BOLETO"
+	//  * "CREDIT_CARD"
+	//  * "DEBIT_CARD"
+	//  * "TRANSFER"
+	//  * "DEPOSIT"
+	//  * "PIX"
+	BillingType string `json:"billingType"`
+	// Obrigatório - Periodicidade da cobrança:
+	//  * "WEEKLY"
+	//  * "BIWEEKLY"
+	//  * "MONTHLY"
+	//  * "BIMONTHLY"
+	//  * "QUARTERLY"
+	//  * "SEMIANNUALLY"
+	//  * "YEARLY"
+	Cycle       string  `json:"cycle"`
+	Value       float64 `json:"value"`       // Valor da assinatura
+	NextDueDate string  `json:"nextDueDate"` // Vencimento do próximo pagamento a ser gerado
+	EndDate     string  `json:"endDate"`     // Data limite para vencimento das cobranças
+	Description string  `json:"description"` // Descrição da assinatura (máx. 500 caracteres)
+	// Status da assinatura
+	//  * "ACTIVE"
+	//  * "EXPIRED"
+	//  * "INACTIVE"
+	Status            string `json:"status"`
+	Deleted           bool   `json:"deleted"`           // Se a Assinatura foi excluído na base de dados da API Asaas
+	MaxPayments       int    `json:"maxPayments"`       // Número máximo de cobranças a serem geradas para esta assinatura
+	ExternalReference string `json:"externalReference"` // Identificador do sistema integrado ao Asaas
+}
+
+type ListSubscriptionResponse struct {
+	Object     string                 `json:"object"`     // Tipo de recurso sendo listado
+	HasMore    bool                   `json:"hasMore"`    // Flag que informa se há mais registros na lista
+	TotalCount int                    `json:"totalCount"` // Total de registros na lista
+	Limit      int                    `json:"limit"`      // Parâmetro "limit" da paginação
+	Offset     int                    `json:"offset"`     // Parâmetro "offset" da paginação
+	Data       []SubscriptionResponse `json:"data"`       // Dados das assinaturas encontradas para os filtros
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // ErrorResponse é a struct que é usada para receber os retornos de erro do Asaas
