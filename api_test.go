@@ -16,7 +16,7 @@ func TestSuccessOnCreateCustomer(t *testing.T) {
 		panic(err)
 	}
 
-	asaasApi := NewAsaasApi("sandbox", os.Getenv("ASAAS_ACCESS_TOKEN"))
+	asaasApi := NewAsaasApi(Sandbox, os.Getenv("ASAAS_ACCESS_TOKEN"))
 
 	response, asaasErr, err := asaasApi.CreateCustomer(CustomerRequest{
 		Name:    "TEST",
@@ -47,7 +47,7 @@ func TestSuccessOnGetCustomerByIdAsaas(t *testing.T) {
 		panic(err)
 	}
 
-	asaasApi := NewAsaasApi("sandbox", os.Getenv("ASAAS_ACCESS_TOKEN"))
+	asaasApi := NewAsaasApi(Sandbox, os.Getenv("ASAAS_ACCESS_TOKEN"))
 
 	response, asaasErr, err := asaasApi.GetCustomerByAsaasId("cus_000006587961")
 
@@ -75,7 +75,7 @@ func TestSuccessOnGetCustomerByCpfCnpj(t *testing.T) {
 		panic(err)
 	}
 
-	asaasApi := NewAsaasApi("sandbox", os.Getenv("ASAAS_ACCESS_TOKEN"))
+	asaasApi := NewAsaasApi(Sandbox, os.Getenv("ASAAS_ACCESS_TOKEN"))
 
 	response, asaasErr, err := asaasApi.GetCustomerByCpfCnpj("25373471000176")
 
@@ -103,7 +103,7 @@ func TestSuccessOnGetCustomerByName(t *testing.T) {
 		panic(err)
 	}
 
-	asaasApi := NewAsaasApi("sandbox", os.Getenv("ASAAS_ACCESS_TOKEN"))
+	asaasApi := NewAsaasApi(Sandbox, os.Getenv("ASAAS_ACCESS_TOKEN"))
 
 	response, asaasErr, err := asaasApi.GetCustomerByName("TESTE")
 
@@ -131,7 +131,7 @@ func TestSuccessOnCreateBilling(t *testing.T) {
 		panic(err)
 	}
 
-	asaasApi := NewAsaasApi("sandbox", os.Getenv("ASAAS_ACCESS_TOKEN"))
+	asaasApi := NewAsaasApi(Sandbox, os.Getenv("ASAAS_ACCESS_TOKEN"))
 
 	response, asaasErr, err := asaasApi.CreateBilling(BillingRequest{
 		Customer:    "cus_000006587961",
@@ -164,7 +164,7 @@ func TestSuccessOnGetBillingByIdAsaas(t *testing.T) {
 		panic(err)
 	}
 
-	asaasApi := NewAsaasApi("sandbox", os.Getenv("ASAAS_ACCESS_TOKEN"))
+	asaasApi := NewAsaasApi(Sandbox, os.Getenv("ASAAS_ACCESS_TOKEN"))
 
 	response, asaasErr, err := asaasApi.GetBillingByAsaasId("pay_8mmmgwqjsxlz7ttn")
 
@@ -192,7 +192,7 @@ func TestSuccessOnDeleteBilling(t *testing.T) {
 		panic(err)
 	}
 
-	asaasApi := NewAsaasApi("sandbox", os.Getenv("ASAAS_ACCESS_TOKEN"))
+	asaasApi := NewAsaasApi(Sandbox, os.Getenv("ASAAS_ACCESS_TOKEN"))
 
 	response, asaasErr, err := asaasApi.DeleteBilling("pay_8mmmgwqjsxlz7ttn")
 
@@ -220,7 +220,7 @@ func TestSuccessOnCreateSubscription(t *testing.T) {
 		panic(err)
 	}
 
-	asaasApi := NewAsaasApi("sandbox", os.Getenv("ASAAS_ACCESS_TOKEN"))
+	asaasApi := NewAsaasApi(Sandbox, os.Getenv("ASAAS_ACCESS_TOKEN"))
 
 	response, asaasErr, err := asaasApi.CreateSubscription(SubscriptionRequest{
 		CustomerId:  "cus_000006587961",
@@ -254,7 +254,7 @@ func TestSuccessOnGetSubscriptionsByCustomerId(t *testing.T) {
 		panic(err)
 	}
 
-	asaasApi := NewAsaasApi("sandbox", os.Getenv("ASAAS_ACCESS_TOKEN"))
+	asaasApi := NewAsaasApi(Sandbox, os.Getenv("ASAAS_ACCESS_TOKEN"))
 
 	response, asaasErr, err := asaasApi.GetSubscriptionsByCustomerId("cus_000006587961")
 

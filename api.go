@@ -7,12 +7,17 @@ import (
 	"github.com/Otarossoni/asaas-sdk-go/internal/request"
 )
 
+type environment string
+
+const Production environment = "production"
+const Sandbox environment = "sandbox"
+
 type AsaasApi struct {
 	BaseURL string
 	Token   string
 }
 
-func NewAsaasApi(environment, token string) *AsaasApi {
+func NewAsaasApi(environment environment, token string) *AsaasApi {
 	return &AsaasApi{
 		BaseURL: getBaseURL(environment),
 		Token:   getAccessToken(token),
@@ -270,7 +275,7 @@ func getAccessToken(asaasAccessToken ...string) string {
 }
 
 // getBaseURL é a função responsável por validar o ambiente e a URL base.
-func getBaseURL(environment string) string {
+func getBaseURL(environment environment) string {
 	if environment == "production" {
 		return "https://api.asaas.com"
 	}
