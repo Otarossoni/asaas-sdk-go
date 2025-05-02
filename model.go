@@ -86,25 +86,36 @@ type BillingRequest struct {
 
 // BillingResponse é a struct usada para receber os dados da criação de uma nova Cobrança na API Asaas
 type BillingResponse struct {
-	Object   string  `json:"object"`   // Tipo de recurso sendo criado
-	Id       string  `json:"id"`       // ID da cobrança na API Asaas
-	Customer string  `json:"customer"` // ID do cliente gerado na API Asaas
-	Value    float64 `json:"value"`    // Valor da cobrança
+	Object      string  `json:"object"`      // Tipo de recurso sendo criado
+	Id          string  `json:"id"`          // ID da cobrança na API Asaas
+	Customer    string  `json:"customer"`    // ID do cliente gerado na API Asaas
+	DateCreated string  `json:"dateCreated"` // Data de criação da cobrança - Formato: yyyy-mm-dd
+	Value       float64 `json:"value"`       // Valor da cobrança
 	// Obrigatório - Forma de pagamento:
 	//  * "UNDEFINED"
 	//  * "BOLETO"
 	//  * "CREDIT_CARD"
 	//  * "PIX"
-	BillingType           string `json:"billingType"`
-	CanBePaidAfterDueDate bool   `json:"canBePaidAfterDueDate"` // Informa se a cobrança pode ser paga após a data de vencimento
-	Status                string `json:"status"`                // Situação da cobrança
-	DueDate               string `json:"dueDate"`               // Data de vencimento da cobrança - Formato: yyyy-mm-dd
-	InvoiceUrl            string `json:"invoiceUrl"`            // URL da cobrança, onde pode ser baixado o PDF / obtida a linha digitável / obtido o código do Boleto PIX
-	InvoiceNumber         string `json:"invoiceNumber"`         // Número da cobrança
-	Deleted               bool   `json:"deleted"`               // Se a Cobrança foi excluída na base de dados da API Asaas
-	NossoNumero           string `json:"nossoNumero"`           // Campo "Nosso Número" do boleto
-	BankSlipUrl           string `json:"bankSlipUrl"`           // URL do boleto da cobrança
-	PostalService         bool   `json:"postalService"`         // Informa se a cobrança foi enviada por e-mail
+	BillingType           string     `json:"billingType"`
+	CanBePaidAfterDueDate bool       `json:"canBePaidAfterDueDate"` // Informa se a cobrança pode ser paga após a data de vencimento
+	CreditCard            CreditCard `json:"creditCard"`            // Informações do cartão de crédito usado no pagamento
+	PixTransaction        string     `json:"pixTransaction"`        // ID da transação do PIX no caso de pagamento via PIX
+	TransactionReceiptUrl string     `json:"transactionReceiptUrl"` // URL do recibo da transação
+	PaymentDate           string     `json:"paymentDate"`           // Data em que o dinheiro irá cair na conta do asaas (no caso de cartão pode ser 30d) - Formato: yyyy-mm-dd
+	ClientPaymentDate     string     `json:"clientPaymentDate"`     // Data em que o cliente efetuou o pagamento da cobrança - Formato: yyyy-mm-dd
+	Status                string     `json:"status"`                // Situação da cobrança
+	DueDate               string     `json:"dueDate"`               // Data de vencimento da cobrança - Formato: yyyy-mm-dd
+	InvoiceUrl            string     `json:"invoiceUrl"`            // URL da cobrança, onde pode ser baixado o PDF / obtida a linha digitável / obtido o código do Boleto PIX
+	InvoiceNumber         string     `json:"invoiceNumber"`         // Número da cobrança
+	Deleted               bool       `json:"deleted"`               // Se a Cobrança foi excluída na base de dados da API Asaas
+	NossoNumero           string     `json:"nossoNumero"`           // Campo "Nosso Número" do boleto
+	BankSlipUrl           string     `json:"bankSlipUrl"`           // URL do boleto da cobrança
+	PostalService         bool       `json:"postalService"`         // Informa se a cobrança foi enviada por e-mail
+}
+
+type CreditCard struct {
+	CreditCardNumber string `json:"creditCardNumber"` // 4 digitos do número do cartão
+	CreditCardBrand  string `json:"creditCardBrand"`  // Bandeira do cartão
 }
 
 type DeleteBillingResponse struct {
