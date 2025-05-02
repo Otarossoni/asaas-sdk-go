@@ -197,6 +197,15 @@ type ListSubscriptionResponse struct {
 	Data       []SubscriptionResponse `json:"data"`       // Dados das assinaturas encontradas para os filtros
 }
 
+type ListBillingResponse struct {
+	Object     string            `json:"object"`     // Tipo de recurso sendo listado
+	HasMore    bool              `json:"hasMore"`    // Flag que informa se há mais registros na lista
+	TotalCount int               `json:"totalCount"` // Total de registros na lista
+	Limit      int               `json:"limit"`      // Parâmetro "limit" da paginação
+	Offset     int               `json:"offset"`     // Parâmetro "offset" da paginação
+	Data       []BillingResponse `json:"data"`       // Dados dos pagamentos encontrados
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // ErrorResponse é a struct que é usada para receber os retornos de erro do Asaas

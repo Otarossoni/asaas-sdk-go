@@ -262,6 +262,30 @@ func (a *AsaasApi) GetSubscriptionsByCustomerId(customerId string) ([]Subscripti
 	return subscriptionResponse.Data, nil, err
 }
 
+// GetSubscriptionsPayments é o método responsável por buscar os pagamentos de uma a assinatura de um cliente
+func (a *AsaasApi) GetSubscriptionsPayments(subscriptionId string) ([]BillingResponse, *ErrorResponse, error) {
+
+	params := request.Params{
+		Method:  "GET",
+		Headers: map[string]interface{}{"access_token": a.Token},
+		URL:     a.BaseURL + "/v3/subscriptions/" + subscriptionId + "/payments",
+	}
+
+	response, err := request.New(params)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	if response.StatusCode > 300 {
+		resp, err := parseError(response.RawBody)
+		return nil, resp, err
+	}
+
+	var billingsResponse ListBillingResponse
+	err = json.Unmarshal(response.RawBody, &billingsResponse)
+	return billingsResponse.Data, nil, err
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // getAccessToken é a função responsável por retornar o AccessToken do Asaas.

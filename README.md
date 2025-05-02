@@ -26,6 +26,7 @@ Funcionalidades disponibilizadas pelo SDK são:
 - Busca de Cliente pelo Nome
 - Criação de Cobrança
 - Busca de Cobrança pelo ID Asaas
+- Busca de Cobranças da assinatura
 - Exclusão de Cobrança
 
 ### 📃 Documentação Oficial
